@@ -17,11 +17,8 @@ function Table() {
   };
 
   useEffect(() => {
-    const tablePlanets = async () => {
-      setFilteredPlanets(getFilteredPlanets());
-    };
-    tablePlanets();
-  });
+    setFilteredPlanets(getFilteredPlanets());
+  }, [search, planets]);
 
   return (
     <div>
@@ -30,6 +27,7 @@ function Table() {
       </label>
       <input
         type="texto"
+        data-testid="name-filter"
         name="texto"
         value={ search }
         onChange={ handleChange }
