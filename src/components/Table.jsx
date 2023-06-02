@@ -3,8 +3,18 @@ import planetContext from '../context/planetContext';
 
 function Table() {
   const { planets } = useContext(planetContext);
+
   const [search, setSearch] = useState('');
+
   const [newPlanets, setFilteredPlanets] = useState(planets);
+
+  const [filterOptions, setFilterOptions] = useState({
+    geografia: '',
+    comparação: '',
+    valores: '',
+  });
+
+  const [activeFilters, setActiveFilters] = useState([]);
 
   const handleChange = (event) => {
     setSearch(event.target.value);
@@ -32,6 +42,64 @@ function Table() {
         value={ search }
         onChange={ handleChange }
       />
+      <label htmlFor="option">
+        Geografia Planetária
+      </label>
+      <select data-testid="column-filter">
+        <option value="population">population</option>
+        <option value="orbital_period">orbital_period</option>
+        <option value="rotation_period">rotation_period</option>
+        <option value="diameter">diameter</option>
+        <option value="surface_water">surface_water</option>
+      </select>
+      <label htmlFor="valor">
+        Comparação
+      </label>
+      <select data-testid="comparison-filter">
+        <option value="maior">maior que</option>
+        <option value="menor">menor que</option>
+        <option value="igual">igual a</option>
+      </select>
+      <label htmlFor="valor">
+        Valores
+      </label>
+      <input
+        type="number"
+        data-testid="value-filter"
+      />
+      <button
+        data-testid="button-filter"
+        type="submit"
+        onClick={ () => {
+          setActiveFilters([...activeFilters, filterOptions]);
+          setFilterOptions({
+            geografia: '',
+            comparação: '',
+            valores: '',
+          });
+        } }
+      >
+        Enviar
+      </button>
+      {setActiveFilters.map((filter, index) => (
+
+        <div key={ index }>
+          <button
+            onClick={ () => {
+              const options = [...activeFilters];
+              /* options.splice(index, 1); */
+              setActiveFilters(options);
+            } }
+          >
+            o
+          </button>
+          <span>
+            {filter.column}
+            {filter.condition}
+            {filter.value}
+          </span>
+        </div>
+      ))}
       <table>
         <thead>
           <tr>
@@ -51,21 +119,19 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {
-            newPlanets.map((planet) => (
-              <tr key={ planet.name }>
-                <td>{planet.name}</td>
-                <td>{planet.rotation_period}</td>
-                <td>{planet.orbital_period}</td>
-                <td>{planet.diameter}</td>
-                <td>{planet.climate}</td>
-                <td>{planet.gravity}</td>
-                <td>{planet.terrain}</td>
-                <td>{planet.surface_water}</td>
-                <td>{planet.population}</td>
-              </tr>
-            ))
-          }
+          {newPlanets.map((planet) => (
+            <tr key={ planet.name }>
+              <td>{planet.name}</td>
+              <td>{planet.rotation_period}</td>
+              <td>{planet.orbital_period}</td>
+              <td>{planet.diameter}</td>
+              <td>{planet.climate}</td>
+              <td>{planet.gravity}</td>
+              <td>{planet.terrain}</td>
+              <td>{planet.surface_water}</td>
+              <td>{planet.population}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
