@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import planetContext from './planetContext';
-import fetchAPI from '../services/fetchAPI';
 
 function Provider({ children }) {
   const [planets, setPlanets] = useState([]);
+  const [search, setSearch] = useState('');
+  const [activeFilters, setActiveFilters] = useState([]);
 
   const getPlanets = async () => {
-    const { results } = await fetchAPI('https://swapi.dev/api/planets');
+    const fetchAPI = await fetch('https://swapi.dev/api/planets');
+    const data = await fetchAPI.json();
 
-    return results.map((planet) => {
-      const planetElement = { ...planet };
-      delete planetElement.residents;
-      return planetElement;
+    return data.results.map((planet) => {
+      delete planet.residents;
+      return planet;
     });
   };
 
@@ -23,8 +24,17 @@ function Provider({ children }) {
     returnPlanets();
   }, []);
 
+  const contexto = {
+    planets,
+    setPlanets,
+    search,
+    setSearch,
+    activeFilters,
+    setActiveFilters,
+  };
+
   return (
-    <planetContext.Provider value={ { planets } }>
+    <planetContext.Provider value={ contexto }>
       {children}
     </planetContext.Provider>
   );

@@ -1,13 +1,15 @@
 import React from 'react';
 import './App.css';
-import Provider from './context/planetProvider';
 import Table from './components/Table';
+import Header from './components/Header';
 
 function App() {
   return (
-    <Provider>
+    <>
+      <h1>Star Wars</h1>
+      <Header />
       <Table />
-    </Provider>
+    </>
   );
 }
 
