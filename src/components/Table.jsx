@@ -13,8 +13,8 @@ function Table() {
     /* const newPlanets.filter((element) => ( */
     /* )) */
 
-    activeFilters.forEach(({ column, comparacao, valor }) => {
-      console.log(column, comparacao, valor);
+    activeFilters.forEach(({ column, comparacao, valor }, indice) => {
+      console.log(indice, column, comparacao, valor);
       newPlanets = newPlanets.filter((planeta) => {
         switch (comparacao) {
         case 'maior que':
