@@ -62,8 +62,6 @@ describe('Table testing', () => {
     let comparisonValue = screen.getByTestId('comparison-filter');
     let valueColumn = screen.getByTestId('value-filter');
     const filterButton = screen.getByRole('button', {name: /enviar/i});
-  
-
 
     userEvent.selectOptions(filterColumn, 'surface_water')  
     userEvent.selectOptions(comparisonValue, 'menor que')
@@ -86,6 +84,8 @@ describe('Table testing', () => {
     
     userEvent.selectOptions(comparisonValue, 'maior que');
     expect(comparisonValue.value).toBe('maior que')
+
+    userEvent.clear(valueColumn)
 
     userEvent.type(valueColumn, '5000');
 

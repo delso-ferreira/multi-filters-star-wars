@@ -10,23 +10,15 @@ function Table() {
       planet.name.toLowerCase().includes((search.toLowerCase()))
     ));
 
-    /* const newPlanets.filter((element) => ( */
-    /* )) */
-
     activeFilters.forEach(({ column, comparacao, valor }, indice) => {
       console.log(indice, column, comparacao, valor);
       newPlanets = newPlanets.filter((planeta) => {
         switch (comparacao) {
         case 'maior que':
-          console.log('1');
           return Number(planeta[column]) > Number(valor);
         case 'menor que':
-          console.log('2');
           return Number(planeta[column]) < Number(valor);
         case 'igual a':
-          console.log('3');
-          /* console.log(planeta[column], valor); */
-          /* console.log(Number(planeta[column]) === Number(valor)); */
           return Number(planeta[column]) === Number(valor);
         default:
           return false;
@@ -34,7 +26,6 @@ function Table() {
       });
     });
 
-    /* newPlanets = */
     setFilteredPlanets(newPlanets);
   }, [planets, search, activeFilters]);
 
