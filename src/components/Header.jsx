@@ -27,12 +27,6 @@ function Header() {
   const handleColumnChoices = (iColumn) => !activeFilters
     .some((filter) => iColumn === filter.column);
 
-  const test = () => {
-    for (let i = 0; i < columnOptions.length; i += 1) {
-      columnOptions.find((c) => (c === c[i]));
-    }
-  };
-
   const handleSubmit = () => {
     setActiveFilters((previous) => ([...previous, selectOptions]));
     setColumn(handleColumnChoices);
@@ -40,7 +34,7 @@ function Header() {
 
   useEffect(() => {
     setSelectOptions({
-      column: test,
+      column: column[0],
       comparacao: 'maior que',
       valor: 0,
     });
