@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../context/planetContext';
 
 function Header() {
-  const { setSearch, setActiveFilters } = useContext(planetContext);
+  const { setSearch, setActiveFilters, activeFilters } = useContext(planetContext);
 
   const columnOptions = ['population', 'orbital_period',
     'rotation_period', 'diameter', 'surface_water'];
@@ -24,14 +24,25 @@ function Header() {
     setSelectOptions((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  /* const handleColumnChoices = (iColumn) => !activeFilters
-    .some((filter) => iColumn === filter.column); */
-
   const handleSubmit = () => {
     const handleColumChoices = columnSelect.filter((el) => el !== selectOptions.column);
     setColumnSelect(handleColumChoices);
 
     setActiveFilters((previous) => ([...previous, selectOptions]));
+  };
+
+  const deleteFilters = (column) => {
+    const newList = activeFilters.filter((filtro) => (filtro.column !== column));
+    setActiveFilters(newList);
+
+    setColumnSelect([...columnSelect, column]);
+    console.log(newList);
+  };
+
+  const deleteAllFilters = () => {
+    setColumnSelect(columnOptions);
+
+    setActiveFilters([]);
   };
 
   useEffect(() => {
@@ -99,6 +110,34 @@ function Header() {
         >
           Enviar
         </button>
+
+        <div>
+          <p>Filters:</p>
+
+          <button
+            type="button"
+            data-testid="button-remove-filters"
+            onClick={ deleteAllFilters }
+          >
+            Remove Filters
+
+          </button>
+
+          {activeFilters.map(({ column, comparacao, valor }, index) => (
+            <div
+              key={ index }
+              data-testid="filter"
+            >
+
+              <button
+                type="button"
+                onClick={ () => deleteFilters(column) }
+              >
+                {`X -- ${column} / ${comparacao} ${valor}`}
+              </button>
+            </div>
+          ))}
+        </div>
       </form>
     </div>
   );
