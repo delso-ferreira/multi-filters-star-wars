@@ -58,40 +58,78 @@ describe('Table testing', () => {
   });
 
   it('Should test multiple filters in sequence', () => {
+    const filterColumn = screen.getByTestId('column-filter');    
+    userEvent.selectOptions(filterColumn, 'orbital_period');
+
+    expect(filterColumn.value).toBe('orbital_period');
+
+    const filterComparison = screen.getByTestId('comparison-filter');
+    userEvent.selectOptions(filterComparison, 'menor que');
+
+    const filterValue = screen.getByTestId('value-filter');
+    userEvent.type(filterValue, '315');
+
+    const filterButton = screen.getByTestId('button-filter');
+    userEvent.click(filterButton);
+
+    const filteredRows = screen.getAllByRole('row');
+
+    expect(filteredRows.length).toBe(3);
+
+    userEvent.selectOptions(filterColumn, 'surface_water');
+
+    userEvent.selectOptions(filterComparison, 'maior que');
+
+    userEvent.type(filterValue, '5');
+
+    userEvent.click(filterButton);
+
+    const filteredRows2 = screen.getAllByRole('row');
+    expect(filteredRows2.length).toBe(2);
+
+    userEvent.selectOptions(filterColumn, 'rotation_period');
+
+    userEvent.selectOptions(filterComparison, 'igual a');
+
+    userEvent.type(filterValue, '300');
+
+    userEvent.click(filterButton);
+
+    const filteredRows3 = screen.getAllByRole('row');
+    
+    expect(filteredRows3.length).toBe(1);
+  })
+  it('Filters must be deleted from dropdown', () => {
     let filterColumn = screen.getByTestId('column-filter');
-    let comparisonValue = screen.getByTestId('comparison-filter');
-    let valueColumn = screen.getByTestId('value-filter');
-    const filterButton = screen.getByRole('button', {name: /enviar/i});
-
-    userEvent.selectOptions(filterColumn, 'surface_water')  
-    userEvent.selectOptions(comparisonValue, 'menor que')
-    userEvent.type(valueColumn, '40')
-
-    userEvent.click(filterButton);
-
-    const secondFilterRow = screen.getAllByRole('row')
-    expect(secondFilterRow.length).toBe(7)        
-    console.log('\nsecondFilterRow:', secondFilterRow);
+    let filterButton = screen.getByRole('button', {name: /enviar/i});
     
+    userEvent.click(filterColumn)
 
-    filterColumn = screen.getByTestId('column-filter');
-    comparisonValue = screen.getByTestId('comparison-filter');
-    valueColumn = screen.getByTestId('value-filter');
+    userEvent.click(filterButton)
 
+    expect(filterColumn.length).toBe(4)
 
-    userEvent.selectOptions(filterColumn, 'diameter');
-    expect(filterColumn.value).toBe('diameter')
+    userEvent.click(filterColumn)
+    userEvent.click(filterButton)
+
+    expect(filterColumn.length).toBe(3)
+
+    userEvent.click(filterColumn)
+    userEvent.click(filterButton)
+
+    expect(filterColumn.length).toBe(2)
+
+    userEvent.click(filterColumn)
+    userEvent.click(filterButton)
+
+    expect(filterColumn.length).toBe(1)
     
-    userEvent.selectOptions(comparisonValue, 'maior que');
-    expect(comparisonValue.value).toBe('maior que')
+    userEvent.click(filterColumn)
+    userEvent.click(filterButton)
 
-    userEvent.clear(valueColumn)
+    expect(filterColumn.length).toBe(0)
 
-    userEvent.type(valueColumn, '5000');
-
-    userEvent.click(filterButton);
-
-    const row = screen.getAllByRole('row')
-    expect(row.length).toBe(6);
+    // primeiro: fazer um teste para retirar um filtro ou seja, testar o length de 4 -> 3
+    // fazer teste do de remoção de todos os filtros , não precisando fazer todas as remoções 1 por 1
   })
 });

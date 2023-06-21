@@ -18,10 +18,8 @@ function Table() {
           return Number(planeta[column]) > Number(valor);
         case 'menor que':
           return Number(planeta[column]) < Number(valor);
-        case 'igual a':
-          return Number(planeta[column]) === Number(valor);
         default:
-          return false;
+          return Number(planeta[column]) === Number(valor);
         }
       });
     });
