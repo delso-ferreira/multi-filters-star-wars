@@ -2,10 +2,18 @@ import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../context/planetContext';
 
 function Header() {
-  const { setSearch, setActiveFilters, activeFilters } = useContext(planetContext);
+  const { setSearch,
+    setActiveFilters,
+    activeFilters,
+    setPlanetOrder } = useContext(planetContext);
 
-  const columnOptions = ['population', 'orbital_period',
-    'rotation_period', 'diameter', 'surface_water'];
+  const columnOptions = [
+    'population',
+    'orbital_period',
+    'rotation_period',
+    'diameter',
+    'surface_water',
+  ];
 
   const [columnSelect, setColumnSelect] = useState(columnOptions);
 
@@ -13,6 +21,11 @@ function Header() {
     column: columnSelect[0],
     comparacao: 'maior que',
     valor: 0,
+  });
+
+  const [columnOrder, setColumnOrder] = useState({
+    column: 'population',
+    sort: 'ASC',
   });
 
   const handleNameFilter = (event) => {
@@ -28,21 +41,26 @@ function Header() {
     const handleColumChoices = columnSelect.filter((el) => el !== selectOptions.column);
     setColumnSelect(handleColumChoices);
 
-    setActiveFilters((previous) => ([...previous, selectOptions]));
+    setActiveFilters((previous) => [...previous, selectOptions]);
   };
 
   const deleteFilters = (column) => {
-    const newList = activeFilters.filter((filtro) => (filtro.column !== column));
+    const newList = activeFilters.filter((filtro) => filtro.column !== column);
     setActiveFilters(newList);
 
     setColumnSelect([...columnSelect, column]);
-    console.log(newList);
   };
 
   const deleteAllFilters = () => {
     setColumnSelect(columnOptions);
-
     setActiveFilters([]);
+  };
+
+  const columnHandleSort = ({ event }) => {
+    const { value, name } = event.target;
+    setColumnOrder((prevState) => ({
+      ...prevState, [name]: value,
+    }));
   };
 
   useEffect(() => {
@@ -72,12 +90,7 @@ function Header() {
           data-testid="column-filter"
         >
           {columnSelect.map((option, index) => (
-            <option
-              key={ index }
-            >
-              {option}
-
-            </option>
+            <option key={ index }>{option}</option>
           ))}
         </select>
         <label htmlFor="valor">
@@ -120,25 +133,67 @@ function Header() {
             onClick={ deleteAllFilters }
           >
             Remove Filters
-
           </button>
 
-          {activeFilters.map(({ column, comparacao, valor }, index) => (
-            <div
-              key={ index }
-              data-testid="filter"
-            >
-
-              <button
-                type="button"
-                onClick={ () => deleteFilters(column) }
-              >
-                {`X -- ${column} / ${comparacao} ${valor}`}
-              </button>
-            </div>
-          ))}
+          <div>
+            {activeFilters.map(({ column, comparacao, valor }, index) => (
+              <div key={ index } data-testid="filter">
+                <button type="button" onClick={ () => deleteFilters(column) }>
+                  {`X -- ${column} / ${comparacao} ${valor}`}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </form>
+      <div>
+        <label htmlFor="column-sort">
+          Ordenação:
+          <select
+            name="column"
+            id="column-sort"
+            data-testid="column-sort"
+            onChange={ columnHandleSort }
+          >
+            {
+              columnOptions.map((column) => (
+                <option value={ column } key={ column }>
+                  {column}
+                </option>
+              ))
+            }
+          </select>
+        </label>
+        <label htmlFor="column-sort-input-asc">
+          <input
+            type="radio"
+            name="sort"
+            value="ASC"
+            id="column-sort-input-asc"
+            data-testid="column-sort-input-asc"
+            onChange={ columnHandleSort }
+          />
+          Crescente:
+        </label>
+        <label htmlFor="column-sort-input-desc">
+          <input
+            type="radio"
+            name="sort"
+            value="DESC"
+            id="column-sort-input-desc"
+            data-testid="column-sort-input-desc"
+            onChange={ columnHandleSort }
+          />
+          Decrescente:
+        </label>
+        <button
+          type="button"
+          data-testid="column-sort-button"
+          onClick={ () => setPlanetOrder(columnOrder) }
+        >
+          Ordenar
+        </button>
+      </div>
     </div>
   );
 }

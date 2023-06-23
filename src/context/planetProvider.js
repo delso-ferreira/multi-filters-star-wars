@@ -6,6 +6,7 @@ function Provider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [search, setSearch] = useState('');
   const [activeFilters, setActiveFilters] = useState([]);
+  const [planetOrder, setPlanetOrder] = useState({});
 
   const getPlanets = async () => {
     const fetchAPI = await fetch('https://swapi.dev/api/planets');
@@ -31,6 +32,8 @@ function Provider({ children }) {
     setSearch,
     activeFilters,
     setActiveFilters,
+    planetOrder,
+    setPlanetOrder,
   };
 
   return (
