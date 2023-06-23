@@ -99,17 +99,31 @@ describe('Table testing', () => {
     
     expect(filteredRows3.length).toBe(1);
   })
-  it('Filters must be deleted from dropdown', () => {
-    let filterColumn = screen.getByTestId('column-filter');
-    let filterButton = screen.getByRole('button', {name: /enviar/i});
+  it('Filters must be deleted from dropdown', () =>  {
+    const filterColumn = screen.getByTestId('column-filter');
+    const compareFilter = screen.getByTestId('comparison-filter')
+    const valueFilter = screen.getByTestId('value-filter');
+    const filterButton = screen.getByRole('button', {name: /enviar/i});
+    const removeButton = screen.getByTestId('button-remove-filters')
+    const rowFilter = screen.getAllByRole('row')
+      
+    userEvent.selectOptions(filterColumn, 'diameter')
+    userEvent.selectOptions(compareFilter, 'igual a')
+    userEvent.type(valueFilter, '7200')
+
     
-    userEvent.click(filterColumn)
-
     userEvent.click(filterButton)
-
+    
+    expect(rowFilter.length).toBe(2)
+    
     expect(filterColumn.length).toBe(4)
 
-    userEvent.click(filterColumn)
+    userEvent.click(removeButton)
+
+    expect(filterColumn.length).toBe(5)
+    expect(rowFilter.length).toBe(11)
+
+    /* userEvent.click(filterColumn)
     userEvent.click(filterButton)
 
     expect(filterColumn.length).toBe(3)
@@ -126,10 +140,26 @@ describe('Table testing', () => {
     
     userEvent.click(filterColumn)
     userEvent.click(filterButton)
-
-    expect(filterColumn.length).toBe(0)
+ */
+    /* expect(filterColumn.length).toBe(0) */
 
     // primeiro: fazer um teste para retirar um filtro ou seja, testar o length de 4 -> 3
     // fazer teste do de remoção de todos os filtros , não precisando fazer todas as remoções 1 por 1
   })
+
+  /* it('should remove all filters', () => {
+    let filterColumn = screen.getByTestId('column-filter');
+    let filterComparison = screen.getByTestId('comparison-filter')
+    let filterValue = screen.getByTestId('value-filter')
+    let filterButton = screen.getByRole('button', {name: /enviar/i});
+    let removeButton = screen.getByTestId('button-remove-filters')
+
+    userEvent.selectOptions(filterColumn, 'population')
+
+    userEvent.selectOptions(filterComparison, 'maior que')
+
+    userEvent.type(filterValue, '5000')
+
+    userEvent.click(filterButton)
+  }) */
 });

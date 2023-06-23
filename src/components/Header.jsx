@@ -5,7 +5,7 @@ function Header() {
   const { setSearch,
     setActiveFilters,
     activeFilters,
-    setPlanetOrder } = useContext(planetContext);
+    /* setPlanetOrder */ } = useContext(planetContext);
 
   const columnOptions = [
     'population',
@@ -23,10 +23,10 @@ function Header() {
     valor: 0,
   });
 
-  const [columnOrder, setColumnOrder] = useState({
+  /*  const [columnOrder, setColumnOrder] = useState({
     column: 'population',
     sort: 'ASC',
-  });
+  }); */
 
   const handleNameFilter = (event) => {
     setSearch(event.target.value);
@@ -56,12 +56,12 @@ function Header() {
     setActiveFilters([]);
   };
 
-  const columnHandleSort = ({ event }) => {
-    const { value, name } = event.target;
+  /* const columnHandleSort = ({ target }) => {
+    const { value, name } = target;
     setColumnOrder((prevState) => ({
       ...prevState, [name]: value,
     }));
-  };
+  }; */
 
   useEffect(() => {
     setSelectOptions({
@@ -146,7 +146,7 @@ function Header() {
           </div>
         </div>
       </form>
-      <div>
+      {/* <div>
         <label htmlFor="column-sort">
           Ordenação:
           <select
@@ -193,7 +193,7 @@ function Header() {
         >
           Ordenar
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
