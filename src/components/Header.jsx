@@ -29,7 +29,9 @@ function Header() {
   }); */
 
   const handleNameFilter = (event) => {
+    const { value } = event.target;
     setSearch(event.target.value);
+    console.log(value);
   };
 
   const handleColumnFilters = (event) => {

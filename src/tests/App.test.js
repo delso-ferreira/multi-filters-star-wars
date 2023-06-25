@@ -1,40 +1,72 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import Provider from '../context/planetProvider';
-import mockData from '../helpers/mockdata';
+/* import mockData from '../helpers/mockdata'; */
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
+import testData from '../../cypress/mocks/testData';
+
+
+
+/* beforeEach(() => {
+
+  jest.spyOn(global, 'fetch');
+
+  global.fetch = jest.fn().mockResolvedValue({
+    json: jest.fn().mockResolvedValue(testData),
+  });
+
+   render (
+    <Provider>
+      <App />
+    </Provider>
+  )
+});
+
+afterEach(() => {
+  global.fetch.mockRestore();
+});
+ */
+
+beforeEach(() => {
+  jest.spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve({
+      status: 200,
+      ok: true,
+      json: () => Promise.resolve(testData)
+    }));
+});
+afterEach(jest.restoreAllMocks);
+
 
 describe('Table testing', () => {
-  beforeEach(() => {
 
-    jest.spyOn(global, 'fetch');
-
-    global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(mockData),
-    });
-
+  it('teting search filter', async () => {
     render (
       <Provider>
         <App />
       </Provider>
     )
-  });
 
-  afterEach(() => {
-    global.fetch.mockRestore();
-  });
+    const search = screen.getByTestId('name-filter')
 
-  it('teting search filter', () => {
-    const search = screen.getByRole('textbox')
+    act(() => userEvent.type(search, 't'))
 
-    userEvent.type(search, 't')
 
-    const row = screen.getAllByRole('row')
-    expect(row.length).toBe(4);
+    const row = await screen.findAllByRole('row')
+    await waitFor(() => expect(row).toHaveLength(3));
+    screen.debug()
   });
 
   it('testing dropbox and value filters', () => {
+    
+    render (
+      <Provider>
+        <App />
+      </Provider>
+    )
+
     const filterColumn = screen.getByTestId('column-filter');
     userEvent.selectOptions(filterColumn, 'diameter');
 
@@ -58,6 +90,13 @@ describe('Table testing', () => {
   });
 
   it('Should test multiple filters in sequence', () => {
+    
+    render (
+      <Provider>
+        <App />
+      </Provider>
+    )
+
     const filterColumn = screen.getByTestId('column-filter');    
     userEvent.selectOptions(filterColumn, 'orbital_period');
 
@@ -98,32 +137,33 @@ describe('Table testing', () => {
     const filteredRows3 = screen.getAllByRole('row');
     
     expect(filteredRows3.length).toBe(1);
-  })
-  it('Filters must be deleted from dropdown', () =>  {
-    const filterColumn = screen.getByTestId('column-filter');
-    const compareFilter = screen.getByTestId('comparison-filter')
-    const valueFilter = screen.getByTestId('value-filter');
-    const filterButton = screen.getByRole('button', {name: /enviar/i});
-    const removeButton = screen.getByTestId('button-remove-filters')
-    const rowFilter = screen.getAllByRole('row')
-      
-    userEvent.selectOptions(filterColumn, 'diameter')
-    userEvent.selectOptions(compareFilter, 'igual a')
-    userEvent.type(valueFilter, '7200')
+    expect(filterColumn.length).toBe(2)
 
-    
-    userEvent.click(filterButton)
-    
-    expect(rowFilter.length).toBe(2)
-    
-    expect(filterColumn.length).toBe(4)
+    const removeButton = screen.getByTestId('button-remove-filters')
 
     userEvent.click(removeButton)
 
     expect(filterColumn.length).toBe(5)
-    expect(rowFilter.length).toBe(11)
+    
+  })
+  it('Filters must be deleted from dropdown', () =>  {
+    
+    render (
+      <Provider>
+        <App />
+      </Provider>
+    )
 
-    /* userEvent.click(filterColumn)
+    let filterColumn = screen.getByTestId('column-filter');
+    let filterButton = screen.getByRole('button', {name: /enviar/i});
+
+    userEvent.click(filterColumn)
+
+    userEvent.click(filterButton)
+    
+    expect(filterColumn.length).toBe(4)
+    screen.debug()
+    userEvent.click(filterColumn)
     userEvent.click(filterButton)
 
     expect(filterColumn.length).toBe(3)
@@ -137,29 +177,42 @@ describe('Table testing', () => {
     userEvent.click(filterButton)
 
     expect(filterColumn.length).toBe(1)
-    
+
     userEvent.click(filterColumn)
     userEvent.click(filterButton)
- */
-    /* expect(filterColumn.length).toBe(0) */
+
+    expect(filterColumn.length).toBe(0)
 
     // primeiro: fazer um teste para retirar um filtro ou seja, testar o length de 4 -> 3
     // fazer teste do de remoção de todos os filtros , não precisando fazer todas as remoções 1 por 1
   })
 
-  /* it('should remove all filters', () => {
-    let filterColumn = screen.getByTestId('column-filter');
-    let filterComparison = screen.getByTestId('comparison-filter')
-    let filterValue = screen.getByTestId('value-filter')
-    let filterButton = screen.getByRole('button', {name: /enviar/i});
-    let removeButton = screen.getByTestId('button-remove-filters')
+  it('testing remove all filters', async () => {
 
-    userEvent.selectOptions(filterColumn, 'population')
+    render (
+      <Provider>
+        <App />
+      </Provider>
+    )
 
-    userEvent.selectOptions(filterComparison, 'maior que')
+    const filtroColuna = screen.getByTestId('column-filter');
+    const filtoCompare = screen.getByTestId('comparison-filter')
+    const filtroVal = screen.getByTestId('value-filter')
+    const filtroBtn = screen.getByRole('button', {name: /enviar/i});
+    /* const filtroRmv = screen.getByTestId('button-remove-filters') */
+    const checkCol = screen.getAllByRole('row');
 
-    userEvent.type(filterValue, '5000')
+    userEvent.click(filtroColuna)
 
-    userEvent.click(filterButton)
-  }) */
+    userEvent.click(filtoCompare)
+
+    userEvent.type(filtroVal, '1')
+
+    userEvent.click(filtroBtn)
+
+    await waitfor (() => 
+      expect(checkCol.length).toBe(9)
+    )
+
+  }) 
 });
