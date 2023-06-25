@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../context/planetContext';
 
 function Table() {
-  const { planets, search, activeFilters } = useContext(planetContext);
+  const { planets, search, activeFilters, planetOrder } = useContext(planetContext);
   const [filteredPlanets, setFilteredPlanets] = useState(planets);
 
   useEffect(() => {
@@ -24,8 +24,32 @@ function Table() {
       });
     });
 
+    if (planetOrder.column) {
+      const planetWithVal = [];
+      const planetWithNoVal = [];
+      newPlanets.forEach((planeta) => {
+        if (planeta[planetOrder.column] === 'unknown') {
+          planetWithNoVal.push(planeta);
+        } else {
+          planetWithVal.push(planeta);
+        }
+      });
+      if (planetOrder.sort === 'ASC') {
+        planetWithVal
+          .sort((a, b) => Number(a[planetOrder.column]) - Number(b[planetOrder.column]));
+      }
+      if (planetOrder.sort === 'DESC') {
+        planetWithVal
+          .sort((a, b) => Number(b[planetOrder.column]) - Number(a[planetOrder.column]));
+      }
+      newPlanets = [
+        ...planetWithVal,
+        ...planetWithNoVal,
+      ];
+    }
+
     setFilteredPlanets(newPlanets);
-  }, [planets, search, activeFilters]);
+  }, [planets, search, activeFilters, planetOrder]);
 
   return (
     <div>
@@ -52,14 +76,14 @@ function Table() {
             <tr
               key={ element.name }
             >
-              {Object.values(element).map((item, index) => (
-                <td
-                  key={ index }
-                >
-                  {item}
-
-                </td>
-              ))}
+              {
+                Object.values(element).map((option, i) => {
+                  if (i === 0) {
+                    return <td key={ i } data-testid="planet-name">{ option }</td>;
+                  }
+                  return <td key={ i }>{ option }</td>;
+                })
+              }
 
             </tr>
           ))}
