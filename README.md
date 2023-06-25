@@ -11,7 +11,7 @@ Para executar a aplicação, siga os seguintes passos:
 <h3>Clone o repositório:</h3>
 git clone https://github.com/delso-ferreira/multi-filters-star-wars
 
-<h3>Instale as dependênciaso:</h3>
+<h3>Instale as dependências:</h3>
 npm install
 
 <h3>Rode a aplicação:</h3>
