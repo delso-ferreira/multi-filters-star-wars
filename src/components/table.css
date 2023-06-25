@@ -1,0 +1,26 @@
+body {
+  background-color: rgb(31, 29, 29);
+  color: white;
+}
+
+.table__container {
+  height: min-content;
+  left: -708px;
+  top: 448px;
+}
+
+
+.table__header--row {
+  background-color: grey;
+  height: 45px;
+  width: 1212px;
+}
+
+.table__body--container {
+  background-color: rgb(37, 36, 36);
+  color: white;
+  text-align: center;
+
+
+
+}

@@ -7,7 +7,7 @@ import Provider from './context/planetProvider';
 function App() {
   return (
     <>
-      <h1>Star Wars</h1>
+      <h1 className="app__title">Star Wars - Planets Filter</h1>
       <Provider>
         <Header />
         <Table />

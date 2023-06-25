@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../context/planetContext';
+import './table.css';
 
 function Table() {
   const { planets, search, activeFilters, planetOrder } = useContext(planetContext);
@@ -52,10 +53,12 @@ function Table() {
   }, [planets, search, activeFilters, planetOrder]);
 
   return (
-    <div>
+    <div className="table__container">
       <table>
-        <thead>
-          <tr>
+        <thead
+          className="table__header--container"
+        >
+          <tr className="table__header--row">
             <th>name</th>
             <th>rotation_period</th>
             <th>orbital_period</th>
@@ -71,10 +74,11 @@ function Table() {
             <th>url</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="table__body--container">
           {filteredPlanets.map((element) => (
             <tr
               key={ element.name }
+              className="table__body--row"
             >
               {
                 Object.values(element).map((option, i) => {

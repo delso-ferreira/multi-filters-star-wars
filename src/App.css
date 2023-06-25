@@ -1,41 +1,29 @@
-.App {
+.app__title {
+  color: wheat;
+  position: relative;
   text-align: center;
+  transition: color 0.3s;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app__title:hover {
+  animation: flicker 1s infinite;
 }
 
-@media ( prefers-reduced-motion : no-preference ) {
+@keyframes flicker {
 
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  align-items: center;
-  background-color: #282c34;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-
-  from {
-    transform: rotate(0deg);
+  25% {
+    color: #d8d84f;
   }
 
-  to {
-    transform: rotate(360deg);
+  50% {
+    color: #7ec456;
+  }
+
+  75% {
+    color: #f2ffc5;
+  }
+
+  100% {
+    color: #fbfbfd;
   }
 }
